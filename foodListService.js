@@ -19,6 +19,9 @@ async function getFoodList(){
     const sideCouse= $(".bugununYemegi .ylsYanYemek .ikiliYlninYaziAlani");
     const sideCouseCal= $(".bugununYemegi .ylsYanYemek .kaloriSpani");
     
+
+
+    
     var foodList = {
         soup : soup.text(),
         soupCal: soupCal.text(),
