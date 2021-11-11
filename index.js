@@ -26,13 +26,7 @@ async function openSlimBot() {
         "/" +
         (currentdate.getMonth() + 1) +
         "/" +
-        currentdate.getFullYear() +
-        " @ " +
-        currentdate.getHours() +
-        ":" +
-        currentdate.getMinutes() +
-        ":" +
-        currentdate.getSeconds();
+        currentdate.getFullYear()
       slimbot.sendMessage(message.chat.id, `${datetime}\n\n${foodList}`);
     } else if (message.text.toLowerCase() == "/subscribe") {
       if (!subscribedChatIds.includes(message.chat.id)) {
@@ -74,13 +68,7 @@ async function dailyFoodList() {
         "/" +
         (currentdate.getMonth() + 1) +
         "/" +
-        currentdate.getFullYear() +
-        " @ " +
-        currentdate.getHours() +
-        ":" +
-        currentdate.getMinutes() +
-        ":" +
-        currentdate.getSeconds();
+        currentdate.getFullYear()
       slimbot.sendMessage(chatId, `${datetime}\n\n${foodList}`);
     });
   }, 86400000);
