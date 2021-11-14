@@ -1,7 +1,7 @@
 const foodListService = require("./foodListService");
 const Slimbot = require("slimbot");
 const dbFunctions = require("./db");
-const telegramBotToken = require("./secret")
+const telegramBotToken = require("./secret");
 const slimbot = new Slimbot(telegramBotToken);
 
 var subscribedChatIds = [];
@@ -26,8 +26,10 @@ async function openSlimBot() {
         "/" +
         (currentdate.getMonth() + 1) +
         "/" +
-        currentdate.getFullYear()
-      slimbot.sendMessage(message.chat.id, `${datetime}\n\n${foodList}`);
+        currentdate.getFullYear();
+      if (foodList["soup"] != "") {
+        slimbot.sendMessage(message.chat.id, `${datetime}\n\n${foodList}`);
+      }
     } else if (message.text.toLowerCase() == "/subscribe") {
       if (!subscribedChatIds.includes(message.chat.id)) {
         await dbFunctions.addChatId(message);
@@ -60,17 +62,19 @@ async function openSlimBot() {
 async function dailyFoodList() {
   setInterval(async function () {
     foodList = await foodListService.getFoodList();
-    foodList = await foodListService.foodListString(foodList);
-    subscribedChatIds.forEach(chatId => {
-      const currentdate = new Date();
-      var datetime =
-        currentdate.getDate() +
-        "/" +
-        (currentdate.getMonth() + 1) +
-        "/" +
-        currentdate.getFullYear()
-      slimbot.sendMessage(chatId, `${datetime}\n\n${foodList}`);
-    });
+    if (foodList["soup"] != "") {
+      foodList = await foodListService.foodListString(foodList);
+      subscribedChatIds.forEach(chatId => {
+        const currentdate = new Date();
+        var datetime =
+          currentdate.getDate() +
+          "/" +
+          (currentdate.getMonth() + 1) +
+          "/" +
+          currentdate.getFullYear();
+        slimbot.sendMessage(chatId, `${datetime}\n\n${foodList}`);
+      });
+    }
   }, 86400000);
 }
 
