@@ -12,7 +12,7 @@ async function openSlimBot() {
     if (message.text == "/start") {
       slimbot.sendMessage(
         message.chat.id,
-        "İBU Yemek Listesine Hoş Geldiniz!\nAbone olmak için- /subscribe\nHer sabah 8'de yemek listesi mesaj olarak gelsin. \nAbonelikten çıkmak için- /unsubscribe\nListeyi öğrenmek için- /list\nYardım almak için- /help"
+        "İBU Yemek Listesine Hoş Geldiniz!\nAbone olmak için- /subscribe\nHer sabah 8'de yemek listesi mesaj olarak gelsin. \nAbonelikten çıkmak için- /unsubscribe\nListeyi öğrenmek için- /list\nKaynak Kod İçin - /source\nYardım almak için- /help"
       );
     } else if (message.text.toLowerCase() == "/help") {
       slimbot.sendMessage(
@@ -62,6 +62,8 @@ async function openSlimBot() {
         slimbot.sendMessage(message.chat.id, "Abonelikten Çıktınız.");
         subscribedUsers = await dbFunctions.getUsers();
       }
+    } else if (message.text.toLowerCase() == "/source"){
+      slimbot.sendMessage(message.chat.id, "https://github.com/safderun/ibuYemekBotu");
     }
   });
 }
