@@ -44,7 +44,7 @@ async function openSlimBot() {
         );
       } else {
         await dbFunctions.subscribeUser(message);
-        slimbot.sendMessage(message.chat.id, "Yemek listesine abone oldunuz.\nHersabah saat 10'da yemek listesi mesaj olarak iletilecektir.");
+        slimbot.sendMessage(message.chat.id, "Yemek listesine abone oldunuz.\nHer sabah saat 10'da yemek listesi mesaj olarak iletilecektir.");
         subscribedUsers = await dbFunctions.getUsers();
       }
     } else if (message.text.toLowerCase() == "/unsubscribe") {
