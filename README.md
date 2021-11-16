@@ -1,6 +1,4 @@
-Bolu Abant İzzet Baysal Universitesi Günlük Yemek Listesini Abone olanlara 24 saatte bir gönderen telegram botu.
+Bolu Abant İzzet Baysal Universitesi Yemekhane Listesini Mesaj Olarak Alabildiğiniz Telegram Servisi.
 
-secret.js dosyası oluşturup içini şu şekilde doldurarak kullanıma başlanabilir:
-botApitoken = '1231729:ABABSDASDASD'
+Ayrıca abone olarak her sabah 10'da günlük yemek listesini mesaj olarak alabilirsiniz.
 
-module.exports = botApitoken
