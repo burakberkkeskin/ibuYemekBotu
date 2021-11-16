@@ -2,7 +2,7 @@ const foodListService = require("./foodListService");
 const Slimbot = require("slimbot");
 const dbFunctions = require("./dbServices");
 require("dotenv").config();
-const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN_DENEME);
+const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN);
 
 var subscribedUsers = [];
 var foodList;
