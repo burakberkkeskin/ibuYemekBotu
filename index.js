@@ -2,7 +2,8 @@ const foodListService = require("./foodListService");
 const Slimbot = require("slimbot");
 const dbFunctions = require("./db");
 const telegramBotToken = require("./secret");
-const slimbot = new Slimbot(telegramBotToken);
+require('dotenv').config()
+const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN);
 
 var subscribedChatIds = [];
 var foodList;
@@ -86,6 +87,7 @@ async function main() {
   dailyFoodList();
   openSlimBot();
   slimbot.startPolling();
+  console.log(process.env.TELEGRAM_token);
 }
 
 main();
