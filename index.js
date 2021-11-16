@@ -1,10 +1,10 @@
 const foodListService = require("./foodListService");
 const Slimbot = require("slimbot");
-const dbFunctions = require("./db");
-require('dotenv').config()
-const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN);
+const dbFunctions = require("./dbServices");
+require("dotenv").config();
+const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN_DENEME);
 
-var subscribedChatIds = [];
+var subscribedUsers = [];
 var foodList;
 
 async function openSlimBot() {
@@ -28,32 +28,39 @@ async function openSlimBot() {
         "/" +
         currentdate.getFullYear();
       if (foodList["soup"] != "") {
-        slimbot.sendMessage(message.chat.id, `${datetime}\n\n${foodList}`);
+        var foodListString = await foodListService.foodListString(foodList);
+
+        slimbot.sendMessage(message.chat.id, `${datetime}\n\n${foodListString}`);
       }
     } else if (message.text.toLowerCase() == "/subscribe") {
-      if (!subscribedChatIds.includes(message.chat.id)) {
-        await dbFunctions.addChatId(message);
-        subscribedChatIds = await dbFunctions.getChatIds();
-        slimbot.sendMessage(message.chat.id, "Yemek listesine abone oldunuz.");
-      } else {
+      var subscribedChatIds = [];
+      subscribedUsers.forEach(user => {
+        subscribedChatIds.push(user.chatId);
+      });
+      if (subscribedChatIds.includes(message.chat.id)) {
         slimbot.sendMessage(
           message.chat.id,
           "Zaten yemek listesine abonesiniz."
         );
+      } else {
+        await dbFunctions.subscribeUser(message);
+        slimbot.sendMessage(message.chat.id, "Yemek listesine abone oldunuz.");
+        subscribedUsers = await dbFunctions.getUsers();
       }
     } else if (message.text.toLowerCase() == "/unsubscribe") {
-      if (subscribedChatIds.includes(message.chat.id)) {
-        await dbFunctions.removeChatId(message);
-        subscribedChatIds = await dbFunctions.getChatIds();
-        slimbot.sendMessage(
-          message.chat.id,
-          "Yemek listesi aboneliğinden çıktınız."
-        );
-      } else {
+      var subscribedChatIds = [];
+      subscribedUsers.forEach(user => {
+        subscribedChatIds.push(user.chatId);
+      });
+      if (!subscribedChatIds.includes(message.chat.id)) {
         slimbot.sendMessage(
           message.chat.id,
           "Zaten yemek listesine abone değilsiniz."
         );
+      } else {
+        await dbFunctions.unsubscribeUser(message);
+        slimbot.sendMessage(message.chat.id, "Abonelikten Çıktınız.");
+        subscribedUsers = await dbFunctions.getUsers();
       }
     }
   });
@@ -64,7 +71,7 @@ async function dailyFoodList() {
     foodList = await foodListService.getFoodList();
     if (foodList["soup"] != "") {
       foodList = await foodListService.foodListString(foodList);
-      subscribedChatIds.forEach(chatId => {
+      subscribedUsers.forEach(user => {
         const currentdate = new Date();
         var datetime =
           currentdate.getDate() +
@@ -72,17 +79,17 @@ async function dailyFoodList() {
           (currentdate.getMonth() + 1) +
           "/" +
           currentdate.getFullYear();
-        slimbot.sendMessage(chatId, `${datetime}\n\n${foodList}`);
+        slimbot.sendMessage(user.chatId, `${datetime}\n\n${foodList}`);
       });
     }
   }, 86400000);
 }
 
 async function main() {
+  console.log("IBU_YEMEK_BOTU Started");
   foodList = await foodListService.getFoodList();
-  foodList = await foodListService.foodListString(foodList);
 
-  subscribedChatIds = await dbFunctions.getChatIds();
+  subscribedUsers = await dbFunctions.getUsers();
   dailyFoodList();
   openSlimBot();
   slimbot.startPolling();
