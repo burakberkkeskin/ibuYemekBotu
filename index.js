@@ -28,9 +28,7 @@ async function openSlimBot() {
         "/" +
         (currentdate.getMonth() + 1) +
         "/" +
-        currentdate.getFullYear()+ ' '+currentdate.getHours() + ":"  
-        + currentdate.getMinutes() + ":" 
-        + currentdate.getSeconds();
+        currentdate.getFullYear();
       if (foodList["soup"] != "") {
         var foodListString = await foodListService.foodListString(foodList);
 
@@ -72,7 +70,7 @@ async function openSlimBot() {
   });
 }
 
-cron.schedule('00 03 11 * * *', async ()=>{
+cron.schedule('00 30 13 * * *', async ()=>{
   foodList = await foodListService.getFoodList();
     if (foodList["soup"] != "") {
       foodList = await foodListService.foodListString(foodList);
