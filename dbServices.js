@@ -23,7 +23,6 @@ async function getUsers(){
 }
 
 async function unsubscribeUser(message){
-
     await User.deleteOne({
         'chatId':message.chat.id
     })

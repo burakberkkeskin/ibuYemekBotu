@@ -3,21 +3,23 @@ const Slimbot = require("slimbot");
 const dbFunctions = require("./dbServices");
 require("dotenv").config();
 const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN);
+var cron = require('node-cron');
+
 
 var subscribedUsers = [];
 var foodList;
-
+var helloMessage ="İBU Yemek Listesi Botuna Hoş Geldiniz!\nAbone olmak için- /subscribe\nHer sabah 10:30'da yemek listesi mesaj olarak gelsin. \nAbonelikten çıkmak için- /unsubscribe\nListeyi öğrenmek için- /list\nKaynak Kod İçin - /source\nYardım almak için- /help"
 async function openSlimBot() {
   slimbot.on("message", async message => {
     if (message.text == "/start") {
       slimbot.sendMessage(
         message.chat.id,
-        "İBU Yemek Listesine Hoş Geldiniz!\nAbone olmak için- /subscribe\nHer sabah 10'de yemek listesi mesaj olarak gelsin. \nAbonelikten çıkmak için- /unsubscribe\nListeyi öğrenmek için- /list\nKaynak Kod İçin - /source\nYardım almak için- /help"
+        helloMessage
       );
     } else if (message.text.toLowerCase() == "/help") {
       slimbot.sendMessage(
         message.chat.id,
-        "Abone olmak için /subscribe yazın.\nAbonelikten çıkmak için /unsubscribe yazın."
+        helloMessage
       );
     } else if (message.text.toLowerCase() == "/list") {
       const currentdate = new Date();
@@ -26,7 +28,9 @@ async function openSlimBot() {
         "/" +
         (currentdate.getMonth() + 1) +
         "/" +
-        currentdate.getFullYear();
+        currentdate.getFullYear()+ ' '+currentdate.getHours() + ":"  
+        + currentdate.getMinutes() + ":" 
+        + currentdate.getSeconds();
       if (foodList["soup"] != "") {
         var foodListString = await foodListService.foodListString(foodList);
 
@@ -68,9 +72,8 @@ async function openSlimBot() {
   });
 }
 
-async function dailyFoodList() {
-  setInterval(async function () {
-    foodList = await foodListService.getFoodList();
+cron.schedule('00 03 11 * * *', async ()=>{
+  foodList = await foodListService.getFoodList();
     if (foodList["soup"] != "") {
       foodList = await foodListService.foodListString(foodList);
       subscribedUsers.forEach(user => {
@@ -84,15 +87,15 @@ async function dailyFoodList() {
         slimbot.sendMessage(user.chatId, `${datetime}\n\n${foodList}`);
       });
     }
-  }, 86400000);
-}
+})
+
+
 
 async function main() {
   console.log("IBU_YEMEK_BOTU Started");
   foodList = await foodListService.getFoodList();
 
   subscribedUsers = await dbFunctions.getUsers();
-  dailyFoodList();
   openSlimBot();
   slimbot.startPolling();
 }
