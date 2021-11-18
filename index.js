@@ -70,7 +70,7 @@ async function openSlimBot() {
   });
 }
 
-cron.schedule('00 30 13 * * *', async ()=>{
+cron.schedule('00 30 07 * * *', async ()=>{
   foodList = await foodListService.getFoodList();
     if (foodList["soup"] != "") {
       foodList = await foodListService.foodListString(foodList);
