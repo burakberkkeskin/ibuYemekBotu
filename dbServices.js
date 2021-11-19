@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const User = require('./models/user')
 mongoose.connect(process.env.dbURL)
 
-
 async function subscribeUser(message){
     
     const user = new User({

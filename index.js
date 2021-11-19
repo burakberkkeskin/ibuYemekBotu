@@ -70,10 +70,10 @@ async function openSlimBot() {
   });
 }
 
-cron.schedule('00 30 07 * * *', async ()=>{
+cron.schedule('00 30 12 * * *', async ()=>{
   foodList = await foodListService.getFoodList();
     if (foodList["soup"] != "") {
-      foodList = await foodListService.foodListString(foodList);
+      var foodListString = await foodListService.foodListString(foodList);
       subscribedUsers.forEach(user => {
         const currentdate = new Date();
         var datetime =
@@ -82,7 +82,7 @@ cron.schedule('00 30 07 * * *', async ()=>{
           (currentdate.getMonth() + 1) +
           "/" +
           currentdate.getFullYear();
-        slimbot.sendMessage(user.chatId, `${datetime}\n\n${foodList}`);
+        slimbot.sendMessage(user.chatId, `${datetime}\n\n${foodListString}`);
       });
     }
 })
