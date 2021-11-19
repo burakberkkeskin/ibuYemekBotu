@@ -9,6 +9,7 @@ var subscribedUsers = [];
 var foodList;
 var helloMessage =
     "İBU Yemek Listesi Botuna Hoş Geldiniz!\nAbone olmak için- /subscribe\nHer sabah 10:30'da yemek listesi mesaj olarak gelsin. \nAbonelikten çıkmak için- /unsubscribe\nListeyi öğrenmek için- /list\nKaynak Kod İçin - /source\nYardım almak için- /help";
+
 async function openSlimBot() {
     slimbot.on("message", async message => {
         if (message.text == "/start") {
@@ -75,7 +76,7 @@ async function openSlimBot() {
     });
 }
 
-cron.schedule("00 30 12 * * *", async () => {
+cron.schedule("00 30 07 * * *", async () => {
     foodList = await foodListService.getFoodList();
     if (foodList["soup"] != "") {
         var foodListString = await foodListService.foodListString(foodList);
